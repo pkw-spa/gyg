@@ -1,0 +1,832 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>PKW Seguridad · GyG Thomas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,500;0,600;0,700;0,800;1,800&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+/* Layout: sistema visual de pkw.cl — header blanco, barra de menú azul en mayúsculas, franja celeste de envíos, banners oscuros de categoría, grillas centradas, franja pizarra de beneficios, proveedores sobre azul, footer pizarra. Tema claro único, como la tienda madre. */
+:root{
+  color-scheme:light;
+  --bg:#ffffff; --bg-2:#f6f6f7; --band:#efefef; --strip:#d3dee9;
+  --ink:#2b2d3a; --ink-2:#4b4e5c; --muted:#8a8c96; --line:#e4e5e9;
+  --brand:#3d6fb4; --brand-dk:#2f5a96; --brand-lt:#e8eff8;
+  --slate:#494b5b; --slate-2:#3d3f4e; --slate-ink:#ffffff; --slate-muted:#c9cad3;
+  --tile:#f3f4f6; --ok:#2e8b57; --warn:#c07a12; --sale:#d23c2f;
+  --f:"Poppins",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box}
+html,body{margin:0}img{max-width:100%}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--ink);font-family:var(--f);font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4{margin:0;text-wrap:balance;font-weight:700;letter-spacing:-.005em}
+button{font:inherit;color:inherit;cursor:pointer}
+input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--brand);outline-offset:2px}
+.wrap{max-width:1240px;margin:0 auto;padding-inline:24px}
+@media(max-width:600px){.wrap{padding-inline:16px}}
+
+/* demo */
+.demo{background:var(--slate-2);color:var(--slate-muted);font-size:12px}
+.demo .wrap{display:flex;justify-content:center;gap:4px 14px;flex-wrap:wrap;padding-block:5px;text-align:center}
+.demo b{color:#fff;font-weight:600}
+
+/* header */
+header.top{background:var(--bg);position:sticky;top:env(safe-area-inset-top,0px);z-index:30;box-shadow:0 1px 0 var(--line)}
+.hrow{display:flex;align-items:center;gap:24px;padding-block:14px}
+.logo{display:flex;align-items:center;gap:0;background:none;border:0;padding:0;flex-shrink:0}
+.logo svg{height:52px;width:auto}
+.search{flex:1;max-width:520px;margin-left:auto;position:relative}
+.search input{width:100%;height:42px;border:0;border-bottom:1px solid var(--line);background:none;padding:0 40px 0 4px;font-size:14.5px;color:var(--ink)}
+.search input::placeholder{color:var(--muted)}
+.search input:focus{outline:none;border-bottom-color:var(--brand)}
+.search .go{position:absolute;right:0;top:4px;width:34px;height:34px;border:0;background:none;color:var(--ink-2);display:grid;place-items:center}
+.sugg{position:absolute;left:0;right:0;top:48px;background:var(--bg);border:1px solid var(--line);box-shadow:0 10px 30px rgba(43,45,58,.12);padding:6px;z-index:5}
+.sugg button{display:flex;gap:10px;align-items:center;width:100%;border:0;background:none;padding:8px;text-align:left}
+.sugg button:hover{background:var(--bg-2)}
+.sugg .th{width:42px;height:42px;background:var(--tile);flex-shrink:0;display:grid;place-items:center}
+.sugg .th svg{width:85%}
+.sugg small{color:var(--muted);display:block;font-size:12px}
+.actions{display:flex;align-items:center;gap:4px}
+.ib{display:flex;align-items:center;gap:7px;height:42px;border:0;background:none;padding:0 12px;font-weight:600;font-size:14.5px;color:var(--ink-2)}
+.ib:hover{color:var(--brand)}
+.ib svg{width:20px;height:20px}
+.ib .n{min-width:22px;height:22px;border-radius:11px;background:var(--ink-2);color:#fff;font-size:12px;font-weight:700;display:grid;place-items:center;padding:0 6px}
+.sep{width:1px;height:26px;background:var(--line)}
+.menu-btn{display:none}
+nav.cats{background:var(--brand)}
+nav.cats .wrap{display:flex;justify-content:center;gap:2px;overflow-x:auto;scrollbar-width:none}
+nav.cats .wrap::-webkit-scrollbar{display:none}
+nav.cats button{border:0;background:none;color:#fff;padding:15px 12px 13px;font-size:14px;font-weight:700;text-transform:uppercase;white-space:nowrap;border-bottom:3px solid transparent;letter-spacing:.01em}
+nav.cats button:hover{border-bottom-color:rgba(255,255,255,.5)}
+nav.cats button.on{border-bottom-color:#fff}
+.strip{background:var(--strip);color:var(--ink-2);text-align:center;font-size:14.5px;padding-block:9px}
+.strip span{color:var(--muted);font-size:12.5px}
+@media(max-width:1100px){nav.cats .wrap{justify-content:flex-start}nav.cats button{font-size:13px;padding-inline:10px}}
+@media(max-width:860px){
+  .hrow{flex-wrap:wrap;gap:6px 10px;padding-block:8px}
+  .logo svg{height:40px}
+  .search{order:3;flex-basis:100%;max-width:none;margin:0}
+  .search input{background:var(--bg-2);border:0;border-radius:2px;padding-left:12px}
+  .ib .lbl,.sep{display:none}
+  .actions{margin-left:auto}
+  .menu-btn{display:flex;padding:0 8px}
+  .strip{font-size:13px}
+  header.top{position:relative}
+  .gal,.sumbox{top:0}
+}
+
+main{min-height:60vh}
+.sec{padding-block:52px}
+.sec-h{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:16px;margin-bottom:28px}
+.sec-h h2{grid-column:2;font-size:28px;font-weight:800;text-transform:uppercase;text-align:center;letter-spacing:-.01em}
+.sec-h .more{grid-column:3;justify-self:end}
+.sec-h p{grid-column:1/-1;text-align:center;margin:-8px 0 0;color:var(--muted)}
+.more{border:0;background:none;padding:0;color:var(--muted);font-weight:700;font-size:14px;text-transform:uppercase;letter-spacing:.06em;display:inline-flex;gap:6px;align-items:center}
+.more:hover{color:var(--brand)}
+@media(max-width:700px){.sec{padding-block:36px}.sec-h{grid-template-columns:1fr;gap:6px;margin-bottom:20px}.sec-h h2{grid-column:1;font-size:22px}.sec-h .more{grid-column:1;justify-self:center}.sec-h p{margin:0}}
+
+/* hero */
+.hero{position:relative;overflow:hidden;color:#fff;background:#14243a}
+.hero::before{content:"";position:absolute;inset:0;background:
+ radial-gradient(60% 90% at 78% 60%,rgba(61,111,180,.75),transparent 70%),
+ radial-gradient(40% 70% at 12% 30%,rgba(61,111,180,.45),transparent 70%),
+ linear-gradient(180deg,#1b3352,#10203a)}
+.hero::after{content:"";position:absolute;inset:0;background-image:repeating-linear-gradient(90deg,rgba(255,255,255,.05) 0 2px,transparent 2px 46px),repeating-linear-gradient(0deg,rgba(255,255,255,.035) 0 1px,transparent 1px 46px)}
+.hero .wrap{position:relative;z-index:1;display:grid;grid-template-columns:1fr minmax(0,620px) 1fr;align-items:center;gap:12px;padding-block:52px 56px}
+.hero .side{display:flex;justify-content:center}
+.hero .side svg{width:100%;max-width:240px;height:auto;filter:drop-shadow(0 18px 24px rgba(0,0,0,.35))}
+.hero-c{text-align:center;display:flex;flex-direction:column;align-items:center;gap:14px}
+.hero h1{font-size:clamp(28px,3.6vw,46px);font-weight:800;line-height:1.08;text-shadow:0 2px 16px rgba(0,0,0,.3)}
+.hero h1 span{display:block;font-size:.62em;font-weight:700;margin-top:8px;color:#dbe7f6}
+.hero p{margin:0;color:#c8d6e8;font-size:15.5px;max-width:48ch}
+.finder{display:flex;width:100%;max-width:600px;background:#fff;box-shadow:0 10px 30px rgba(0,0,0,.25);margin-top:6px}
+.finder select{border:0;border-right:1px solid var(--line);background:#fff;padding:0 12px;font-size:15px;color:var(--ink);min-width:0;flex:0 0 42%}
+.finder input{border:0;padding:0 14px;font-size:15px;flex:1;min-width:0;height:52px;color:var(--ink)}
+.finder input:focus,.finder select:focus{outline:none}
+.finder button{border:0;background:var(--brand);color:#fff;padding:0 22px;font-size:15.5px;font-weight:500}
+.finder button:hover{background:var(--brand-dk)}
+.hero .ghost{background:none;border:1px solid rgba(255,255,255,.5);color:#fff;padding:10px 20px;font-weight:600;font-size:14px;text-transform:uppercase;letter-spacing:.04em}
+.hero .ghost:hover{background:rgba(255,255,255,.1)}
+@media(max-width:900px){
+  .hero .wrap{grid-template-columns:1fr;padding-block:32px 36px}
+  .hero .side{display:none}
+  .finder{flex-wrap:wrap}
+  .finder select{flex:1 1 100%;height:48px;border-right:0;border-bottom:1px solid var(--line)}
+  .finder button{height:48px}
+}
+
+/* franja de beneficios estilo pkw */
+.feat{background:var(--slate);color:var(--slate-ink)}
+.feat .wrap{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;padding-block:28px}
+.feat div{display:flex;gap:14px;align-items:flex-start}
+.feat svg{width:30px;height:30px;flex-shrink:0;color:#8fb0db}
+.feat b{display:block;font-size:14px;font-weight:800;text-transform:uppercase;letter-spacing:.03em}
+.feat span{font-size:14px;line-height:1.35;color:#eceef3}
+@media(max-width:900px){.feat .wrap{grid-template-columns:1fr 1fr;gap:18px}}
+@media(max-width:480px){.feat .wrap{grid-template-columns:1fr}}
+
+/* categorías: banners oscuros */
+.cats-sec{background:var(--bg-2)}
+.cgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+.cban{position:relative;aspect-ratio:16/10;border:0;padding:0;overflow:hidden;background:linear-gradient(135deg,#1c2433,#2d3a50);color:#fff;text-align:left;max-width:100%}
+.cban .im{position:absolute;right:-6%;bottom:-8%;width:68%;opacity:.95;transition:transform .35s}
+.cban .im{background:radial-gradient(circle at 50% 55%,rgba(255,255,255,.28),transparent 62%)}
+.cban .im svg{width:100%;height:auto}
+.cban::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(14,20,30,.85) 0%,rgba(14,20,30,.35) 55%,transparent 100%)}
+.cban .tx{position:absolute;left:22px;top:50%;transform:translateY(-50%);z-index:1;display:flex;flex-direction:column;gap:8px;max-width:70%}
+.cban h3{font-size:22px;font-weight:800;text-transform:uppercase;line-height:1.05;text-shadow:0 2px 10px rgba(0,0,0,.4)}
+.cban .vt{font-size:13.5px;font-weight:700;text-transform:uppercase;display:inline-flex;gap:6px;align-items:center;letter-spacing:.03em}
+.cban:hover .im{transform:scale(1.06)}
+.cban .soon{position:absolute;top:12px;right:12px;z-index:1;font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;background:rgba(255,255,255,.14);padding:3px 8px}
+@media(max-width:1000px){.cgrid{grid-template-columns:repeat(2,1fr);gap:12px}}
+@media(max-width:480px){.cban h3{font-size:17px}.cban .tx{left:14px}.cban .vt{font-size:11.5px}}
+
+/* productos, tarjeta pkw */
+.pgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:28px 22px}
+.pgrid.c3{grid-template-columns:repeat(3,1fr)}
+.pcard{display:flex;flex-direction:column;text-align:center;min-width:0}
+.pcard .im{aspect-ratio:1/1;background:var(--tile);border:0;padding:0;display:grid;place-items:center;position:relative;width:100%;max-width:100%}
+.pcard .im svg{width:74%;height:auto;transition:transform .3s}
+.pcard .im:hover svg{transform:scale(1.04)}
+.badge{position:absolute;top:10px;left:10px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;padding:4px 9px;background:var(--brand);color:#fff}
+.badge.low{left:auto;right:10px;background:var(--bg);color:var(--warn);border:1px solid var(--line)}
+.pcard .bd{padding-top:14px;display:flex;flex-direction:column;align-items:center;gap:4px;flex:1}
+.br{font-size:13px;color:var(--muted);font-weight:500;text-transform:uppercase;letter-spacing:.06em}
+.pcard h3{font-size:16.5px;font-weight:700;line-height:1.28}
+.pcard h3 button{border:0;background:none;padding:0;font:inherit;color:inherit}
+.pcard h3 button:hover{color:var(--brand)}
+.norm{font-family:var(--f-mono);font-size:11px;color:var(--ink-2);background:var(--bg-2);padding:3px 7px;margin-top:2px}
+.price{font-weight:700;font-size:18px;font-variant-numeric:tabular-nums;margin-top:4px}
+.stk{font-size:12.5px;color:var(--muted);display:inline-flex;align-items:center;gap:6px}
+.stk i{width:7px;height:7px;border-radius:50%;background:var(--ok)}
+.stk.low i{background:var(--warn)}
+.pbtn{margin-top:auto;width:100%;border:0;background:var(--brand);color:#fff;height:48px;font-weight:700;font-size:14.5px;text-transform:uppercase;letter-spacing:.03em}
+.pcard .bd .pbtn{margin-top:12px}
+.pbtn:hover{background:var(--brand-dk)}
+@media(max-width:1000px){.pgrid,.pgrid.c3{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:700px){.pgrid,.pgrid.c3{grid-template-columns:repeat(2,1fr);gap:22px 12px}.pcard h3{font-size:14px}.price{font-size:16px}.pbtn{height:42px;font-size:12.5px}.br{font-size:11.5px}.norm{font-size:10px}}
+
+/* beneficios empresa */
+.bgrid{display:grid;grid-template-columns:repeat(5,1fr);gap:0;border:1px solid var(--line)}
+.bitem{padding:24px 20px;border-right:1px solid var(--line);display:flex;flex-direction:column;gap:8px;text-align:center;align-items:center}
+.bitem:last-child{border-right:0}
+.bitem svg{width:34px;height:34px;color:var(--brand)}
+.bitem h3{font-size:14.5px;font-weight:800;text-transform:uppercase;letter-spacing:.02em}
+.bitem p{margin:0;font-size:13.5px;color:var(--ink-2)}
+@media(max-width:1000px){.bgrid{grid-template-columns:1fr 1fr}.bitem{border-bottom:1px solid var(--line)}.bitem:nth-child(2n){border-right:0}.bitem:last-child{grid-column:1/-1;border-bottom:0}}
+
+/* proveedor sobre azul */
+.prov{background:var(--brand);color:#fff}
+.prov .lead{display:grid;grid-template-columns:1.2fr 1fr;gap:36px;align-items:center;margin-bottom:34px}
+.prov .eyebrow{font-size:13px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#cfe0f5}
+.prov h2{font-size:30px;font-weight:800;margin:4px 0 12px;text-transform:uppercase}
+.prov p{margin:0 0 10px;color:#e6eef9;max-width:60ch}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);background:rgba(255,255,255,.1)}
+.stats div{padding:20px;border-right:1px solid rgba(255,255,255,.18)}
+.stats div:last-child{border-right:0}
+.stats b{font-size:30px;font-weight:800;display:block;line-height:1.1}
+.stats span{font-size:13px;color:#dbe6f4}
+.bcards{display:grid;grid-template-columns:repeat(4,1fr);gap:22px}
+.bcard{display:flex;flex-direction:column;gap:14px}
+.blogo{background:#fff;height:110px;display:grid;place-items:center;color:var(--ink);font-weight:800;font-size:30px;letter-spacing:-.02em}
+.blogo.dark{background:#11192a;color:#fff}
+.blogo small{display:block;font-size:11px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);text-align:center;margin-top:-4px}
+.bcard p{margin:0;font-size:14px;color:#e6eef9;flex:1}
+.wbtn{align-self:flex-start;background:#fff;color:var(--brand);border:0;padding:12px 22px;font-weight:700;font-size:14px;text-transform:uppercase;display:inline-flex;gap:8px;align-items:center}
+.wbtn:hover{background:var(--brand-lt)}
+@media(max-width:900px){.prov .lead{grid-template-columns:1fr}.bcards{grid-template-columns:1fr 1fr}.stats b{font-size:22px}.stats div{padding:14px}}
+@media(max-width:480px){.bcards{grid-template-columns:1fr}}
+
+.cotiz{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;border:1px solid var(--line);padding:26px 28px;background:var(--bg-2)}
+.cotiz h3{font-size:20px;font-weight:800}
+.cotiz p{margin:4px 0 0;color:var(--ink-2)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:48px;padding:0 24px;border:0;font-weight:700;font-size:14.5px;text-transform:uppercase;letter-spacing:.03em}
+.btn-a{background:var(--brand);color:#fff}
+.btn-a:hover{background:var(--brand-dk)}
+.btn-o{background:var(--bg);border:1px solid var(--brand);color:var(--brand)}
+.btn-o:hover{background:var(--brand-lt)}
+.btn-s{background:var(--slate);color:#fff}
+
+/* breadcrumb y listado */
+.crumbs{background:var(--band);font-size:14px;color:var(--muted);text-align:center;padding-block:10px}
+.crumbs .wrap{display:flex;justify-content:center;gap:10px;flex-wrap:wrap}
+.crumbs button{border:0;background:none;padding:0;color:var(--muted)}
+.crumbs button:hover{color:var(--brand)}
+.crumbs b{color:var(--ink);font-weight:600}
+.ch{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:16px;padding-block:30px 26px}
+.ch h1{grid-column:2;font-size:34px;font-weight:800;text-transform:uppercase;text-align:center;color:var(--ink-2)}
+.ch .right{grid-column:3;justify-self:end;display:flex;gap:10px;align-items:center}
+.ch p{grid-column:1/-1;text-align:center;margin:-10px 0 0;color:var(--muted)}
+.fbtn{display:inline-flex;gap:8px;align-items:center;border:1px solid var(--brand);background:var(--bg);color:var(--brand);height:46px;padding:0 18px;font-weight:700;font-size:14px;text-transform:uppercase;letter-spacing:.05em}
+.fbtn svg{width:16px;height:16px}
+.sel{height:46px;border:1px solid var(--line);padding:0 12px;background:var(--bg)}
+.layout{padding-bottom:64px}
+.fpanel{border:1px solid var(--line);padding:18px 20px;margin-bottom:24px;display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.fpanel h4{font-size:13px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:8px;font-weight:700}
+.fopt{display:flex;align-items:center;gap:10px;padding:4px 0;font-size:14.5px;cursor:pointer}
+.fopt input{width:16px;height:16px;accent-color:var(--brand)}
+.fopt small{color:var(--muted)}
+.chips{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:28px}
+.chips button{border:1px solid var(--line);background:var(--bg);padding:8px 16px;font-size:13.5px;font-weight:600;text-transform:uppercase;letter-spacing:.03em;color:var(--ink-2)}
+.chips button.on{background:var(--brand);color:#fff;border-color:var(--brand)}
+.empty{border:1px solid var(--line);padding:40px 24px;text-align:center;color:var(--ink-2);margin-bottom:64px}
+.empty h3{color:var(--ink);font-size:22px;margin-bottom:8px}
+.empty .subs{display:flex;justify-content:center;flex-wrap:wrap;gap:8px;margin:18px 0 22px}
+.empty .subs span{background:var(--bg-2);padding:6px 12px;font-size:13.5px}
+.empty .cta{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+@media(max-width:700px){.ch{grid-template-columns:1fr;gap:12px;padding-block:22px 18px}.ch h1{grid-column:1;font-size:24px}.ch .right{grid-column:1;justify-self:center}.fpanel{grid-template-columns:1fr}}
+
+/* ficha */
+.pd{display:grid;grid-template-columns:1.05fr 1fr;gap:48px;padding-block:32px 40px}
+.gal{display:grid;grid-template-columns:76px 1fr;gap:12px;align-self:start;position:sticky;top:170px}
+.thumbs{display:flex;flex-direction:column;gap:10px}
+.thumbs button{overflow:hidden;aspect-ratio:1;background:var(--tile);border:2px solid transparent;padding:6px;display:grid;place-items:center}
+.thumbs button.on{border-color:var(--brand)}
+.thumbs svg{width:100%;height:auto}
+.main-im{aspect-ratio:1;background:var(--tile);display:grid;place-items:center;position:relative;max-width:100%;overflow:hidden}
+.main-im svg{width:76%;height:auto}
+.main-im .cap{position:absolute;bottom:12px;right:14px;font-size:11.5px;color:var(--muted)}
+.pinfo{display:flex;flex-direction:column;gap:14px;min-width:0}
+.code{font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-weight:500}
+.code b{font-family:var(--f-mono);font-weight:500;letter-spacing:0;text-transform:none;color:var(--ink-2)}
+.pinfo h1{font-size:30px;font-weight:800;line-height:1.15}
+.pinfo .lead{color:var(--ink-2);margin:0}
+.nrow{display:flex;flex-wrap:wrap;gap:6px}
+.bigp{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;padding-block:4px}
+.bigp .price{font-size:32px;margin:0}
+.bigp small{font-size:12.5px;color:var(--muted)}
+.lab{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;display:flex;justify-content:space-between;margin-bottom:8px}
+.lab span{color:var(--muted);font-weight:500;text-transform:none;letter-spacing:0}
+.sizes{display:flex;flex-wrap:wrap;gap:8px}
+.sizes button{min-width:50px;height:44px;padding:0 12px;border:1px solid var(--line);background:var(--bg);font-weight:600;font-variant-numeric:tabular-nums}
+.sizes button:hover{border-color:var(--brand)}
+.sizes button.on{background:var(--brand);color:#fff;border-color:var(--brand)}
+.need .sizes button:not(.on){border-color:var(--sale)}
+.hint{font-size:13px;color:var(--sale);margin-top:6px}
+.qrow{display:flex;gap:10px;flex-wrap:wrap}
+.step{display:flex;align-items:center;border:1px solid var(--line);height:52px}
+.step button{width:46px;height:100%;border:0;background:none;font-size:18px}
+.step button:hover{background:var(--bg-2)}
+.step input{width:54px;border:0;text-align:center;background:none;font-weight:600;font-variant-numeric:tabular-nums;height:100%}
+.qrow .btn{flex:1;height:52px;min-width:200px}
+.tiers{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.tiers div{border:1px solid var(--line);padding:10px 12px;font-size:12.5px;color:var(--muted)}
+.tiers div b{display:block;color:var(--ink);font-size:15px;font-variant-numeric:tabular-nums}
+.tiers div.on{border-color:var(--brand);background:var(--brand-lt)}
+.shipq{display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:14px;color:var(--ink-2);background:var(--bg-2);padding:12px 14px}
+.shipq svg{width:22px;height:22px;color:var(--brand)}
+.shipq .sel{height:38px}
+.specs{border-top:1px solid var(--line);padding-top:30px;display:grid;grid-template-columns:1fr 1fr;gap:48px;padding-bottom:40px}
+.specs h3{font-size:18px;margin-bottom:12px;text-transform:uppercase;font-weight:800}
+.specs p{color:var(--ink-2);margin:0 0 10px}
+.kv{display:flex;justify-content:space-between;gap:16px;padding:11px 0;border-bottom:1px solid var(--line);font-size:14.5px}
+.kv span:first-child{color:var(--muted)}
+.kv span:last-child{text-align:right;font-weight:500}
+.note{font-size:12.5px;color:var(--muted);margin:0}
+@media(max-width:860px){
+  .pd{grid-template-columns:1fr;gap:20px;padding-top:20px}
+  .gal{position:static;grid-template-columns:1fr}
+  .thumbs{flex-direction:row;order:2}
+  .thumbs button{width:66px}
+  .pinfo h1{font-size:23px}
+  .bigp .price{font-size:27px}
+  .specs{grid-template-columns:1fr;gap:26px}
+}
+
+/* carro */
+.ov{position:fixed;inset:0;background:rgba(30,32,44,.5);z-index:60;display:flex;justify-content:flex-end}
+.drawer{background:var(--bg);width:min(440px,100%);height:100%;display:flex;flex-direction:column;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);animation:sl .22s ease-out}
+@keyframes sl{from{transform:translateX(24px);opacity:.6}to{transform:none;opacity:1}}
+.dh{display:flex;justify-content:space-between;align-items:center;padding:18px 20px;background:var(--brand);color:#fff}
+.dh h2{font-size:17px;text-transform:uppercase;font-weight:800;letter-spacing:.02em}
+.x{width:36px;height:36px;border:0;background:rgba(255,255,255,.15);color:inherit;font-size:20px;line-height:1}
+.mbox .x,.mm .x{background:var(--bg-2)}
+.dl{flex:1;overflow:auto;padding:4px 20px}
+.li{display:grid;grid-template-columns:76px 1fr;gap:14px;padding:16px 0;border-bottom:1px solid var(--line)}
+.li .th{width:76px;height:76px;background:var(--tile);display:grid;place-items:center}
+.li .th svg{width:82%}
+.li h4{font-size:14.5px;font-weight:700;line-height:1.3}
+.li .meta{font-size:12.5px;color:var(--muted)}
+.li .row{display:flex;justify-content:space-between;align-items:center;margin-top:8px;gap:8px}
+.li .step{height:36px}
+.li .step button{width:34px;font-size:16px}
+.li .step input{width:38px;font-size:14px}
+.li .lp{font-weight:700;font-variant-numeric:tabular-nums}
+.rm{border:0;background:none;padding:0;font-size:12.5px;color:var(--muted);text-decoration:underline;margin-top:4px}
+.df{border-top:1px solid var(--line);padding:16px 20px;display:flex;flex-direction:column;gap:8px}
+.tr{display:flex;justify-content:space-between;font-size:14.5px;font-variant-numeric:tabular-nums}
+.tr.mut{color:var(--muted)}
+.tr.tot{font-weight:800;font-size:19px;padding-top:6px}
+.tr.save{color:var(--ok)}
+.de{flex:1;display:grid;place-items:center;text-align:center;color:var(--muted);padding:30px}
+
+/* revisión */
+.rv{display:grid;grid-template-columns:1.5fr 1fr;gap:30px;align-items:start;padding-bottom:64px}
+.box{border:1px solid var(--line);padding:22px}
+.box+.box{margin-top:18px}
+.box h3{font-size:16px;margin-bottom:16px;display:flex;gap:10px;align-items:center;text-transform:uppercase;font-weight:800;letter-spacing:.02em}
+.box h3 i{font-style:normal;width:26px;height:26px;background:var(--brand);color:#fff;font-size:13px;display:grid;place-items:center}
+.seg{display:inline-flex;border:1px solid var(--brand);margin-bottom:16px}
+.seg button{border:0;background:var(--bg);padding:9px 20px;font-size:14px;font-weight:700;color:var(--brand);text-transform:uppercase}
+.seg button.on{background:var(--brand);color:#fff}
+.fg{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fg label{display:flex;flex-direction:column;gap:5px;font-size:12.5px;color:var(--muted);font-weight:500}
+.fg .full{grid-column:1/-1}
+.fg input,.fg select,.fg textarea{height:44px;border:1px solid var(--line);padding:0 12px;background:var(--bg);font-size:14.5px;color:var(--ink)}
+.fg input:focus,.fg select:focus,.fg textarea:focus{outline:none;border-color:var(--brand)}
+.fg textarea{height:88px;padding:10px 12px;resize:vertical}
+.opts{display:flex;flex-direction:column;gap:8px;margin-top:14px}
+.opt{display:flex;gap:12px;align-items:center;border:1px solid var(--line);padding:13px 14px;cursor:pointer;font-size:14.5px}
+.opt:has(input:checked){border-color:var(--brand);background:var(--brand-lt)}
+.opt input{accent-color:var(--brand);width:16px;height:16px}
+.opt .r{margin-left:auto;font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap}
+.opt small{display:block;color:var(--muted);font-size:12.5px}
+.sumbox{position:sticky;top:170px}
+.future{display:flex;gap:12px;background:var(--brand-lt);padding:16px;font-size:13.5px;color:var(--ink-2);margin-top:18px;border-left:3px solid var(--brand)}
+.future b{color:var(--ink)}
+.future svg{width:22px;height:22px;color:var(--brand);flex-shrink:0;margin-top:1px}
+@media(max-width:860px){.rv{grid-template-columns:1fr}.sumbox{position:static}}
+@media(max-width:480px){.fg{grid-template-columns:1fr}}
+
+.ok{max-width:660px;margin:0 auto;text-align:center;padding-block:60px}
+.ok .ck{width:68px;height:68px;border-radius:50%;background:var(--brand-lt);color:var(--brand);display:grid;place-items:center;margin:0 auto 16px}
+.ok h1{font-size:28px;font-weight:800;margin:6px 0 10px;text-transform:uppercase}
+.ok p{color:var(--ink-2)}
+.flow{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;text-align:left;margin:28px 0}
+.flow div{border-top:3px solid var(--brand);background:var(--bg-2);padding:12px;font-size:13px;color:var(--muted)}
+.flow b{display:block;color:var(--ink);font-size:13.5px;margin-bottom:2px}
+@media(max-width:600px){.flow{grid-template-columns:1fr 1fr}}
+
+/* modales */
+.mo{position:fixed;inset:0;background:rgba(30,32,44,.5);z-index:70;display:grid;place-items:center;padding:16px}
+.mbox{background:var(--bg);width:min(540px,100%);max-height:90vh;overflow:auto;padding:28px}
+.mbox h2{font-size:22px;margin-bottom:6px;font-weight:800}
+.mbox>p{color:var(--ink-2);margin:0 0 16px}
+.soon-t{display:inline-block;font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--brand);background:var(--brand-lt);padding:4px 10px;margin-bottom:10px}
+.flist{display:flex;flex-direction:column;gap:10px;margin:0 0 20px;padding:0;list-style:none}
+.flist li{display:flex;gap:10px;font-size:14.5px}
+.flist li svg{width:18px;height:18px;color:var(--brand);flex-shrink:0;margin-top:3px}
+.mclose{display:flex;justify-content:flex-end;gap:10px;flex-wrap:wrap}
+.mm{background:var(--bg);width:min(340px,88%);height:100%;display:flex;flex-direction:column;padding-top:env(safe-area-inset-top,0px)}
+.mm .mh{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;background:var(--brand);color:#fff;font-weight:800;text-transform:uppercase}
+.mm .mh .x{background:rgba(255,255,255,.15)}
+.mm button.it{border:0;background:none;text-align:left;padding:15px 18px;font-size:14.5px;font-weight:700;text-transform:uppercase;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}
+.ov.left{justify-content:flex-start}
+
+/* footer */
+footer{background:var(--slate);color:var(--slate-muted);font-size:14px}
+.ftop{display:flex;justify-content:space-between;align-items:center;gap:16px;padding-block:34px 26px;border-bottom:1px solid rgba(255,255,255,.14);flex-wrap:wrap}
+.ftop svg{height:56px;width:auto}
+.ftop .tag{font-size:13px;letter-spacing:.08em;text-transform:uppercase;font-weight:600}
+.fgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;padding-block:28px}
+footer h4{font-size:14.5px;color:#fff;margin-bottom:12px;font-weight:800;text-transform:uppercase}
+footer ul{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:6px}
+footer li{text-transform:uppercase;font-size:13.5px;font-weight:500}
+footer li.nc{text-transform:none;font-size:14.5px;color:#fff}
+.fbot{border-top:1px solid rgba(255,255,255,.14);padding-block:22px 30px;text-align:center}
+.fbot h4{margin-bottom:10px}
+.pays{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.pays span{background:#fff;color:var(--ink);padding:5px 10px;font-size:12px;font-weight:700}
+.fbot p{margin:14px 0 0;font-size:12.5px}
+@media(max-width:700px){.fgrid{grid-template-columns:1fr}.ftop svg{height:44px}}
+
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--slate-2);color:#fff;padding:13px 20px;font-size:14px;z-index:80;display:flex;gap:14px;align-items:center;box-shadow:0 10px 30px rgba(0,0,0,.2);max-width:calc(100% - 32px)}
+.toast button{border:0;background:none;color:#a9c4ea;font-weight:700;padding:0;text-transform:uppercase;font-size:13px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+
+<div class="demo"><div class="wrap"><b>Propuesta de canal digital para productos GyG Thomas</b><span>Demo comercial · precios y stock referenciales · sin compras reales</span></div></div>
+<header class="top">
+  <div class="wrap hrow">
+    <button class="ib menu-btn" id="menuBtn" type="button" aria-label="Abrir menú"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+    <button class="logo" id="logo" type="button" aria-label="PKW Seguridad, inicio"></button>
+    <div class="search" role="search">
+      <input id="q" type="search" autocomplete="off" placeholder="Busque productos aquí…" aria-label="Buscar productos">
+      <button class="go" id="go" type="button" aria-label="Buscar"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></button>
+      <div class="sugg" id="sugg" hidden></div>
+    </div>
+    <div class="actions">
+      <span class="sep"></span>
+      <button class="ib" id="acct" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg><span class="lbl">Mi Cuenta</span></button>
+      <span class="sep"></span>
+      <button class="ib" id="cartBtn" type="button" aria-label="Carro"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M3 4h2.5l2.2 11h10.8l2-8H6.3"/><circle cx="9.5" cy="19.5" r="1.4"/><circle cx="17" cy="19.5" r="1.4"/></svg><span class="n" id="cn">0</span></button>
+    </div>
+  </div>
+  <nav class="cats" aria-label="Categorías"><div class="wrap" id="nav"></div></nav>
+  <div class="strip">Envíos a todo Chile.</div>
+</header>
+<main id="view"></main>
+<footer>
+  <div class="wrap ftop"><span id="flogo"></span><span class="tag">Una división de PKW · Productos GyG Thomas</span></div>
+  <div class="wrap fgrid">
+    <div><h4>Nosotros</h4><ul><li>Sobre PKW Seguridad</li><li>Términos y condiciones</li><li>Política de privacidad</li></ul></div>
+    <div><h4>Atención al cliente</h4><ul><li>Cómo comprar</li><li>Factura empresa</li><li>Cambios y devoluciones</li></ul></div>
+    <div><h4>Contáctenos</h4><ul><li class="nc">contacto@pkw.cl</li><li class="nc">Lunes a jueves 09:00 a 18:30 hrs.</li><li class="nc">Viernes 09:00 a 17:00 hrs.</li></ul></div>
+  </div>
+  <div class="wrap fbot"><h4>Métodos de pago aceptados</h4><div class="pays"><span>Webpay</span><span>Mercado Pago</span><span>Visa</span><span>Mastercard</span><span>Transferencia</span></div><p>Prototipo de propuesta comercial. No es una tienda operativa.</p></div>
+</footer>
+<div id="layer"></div>
+<div class="toast" id="toast" hidden></div>
+
+<script>
+/* ---------- Ilustraciones de producto (reemplazables por fotografía oficial) ---------- */
+let uid=0;
+const ART={
+ glove(o){const id="g"+(++uid);const L=o.liner,C=o.coat,K=o.cuff||o.liner;
+  return `<svg viewBox="0 0 200 200" aria-hidden="true"><defs><clipPath id="${id}"><rect x="62" y="40" width="21" height="74" rx="10.5"/><rect x="85" y="28" width="21" height="84" rx="10.5"/><rect x="108" y="34" width="21" height="78" rx="10.5"/><rect x="131" y="52" width="18" height="62" rx="9"/><rect x="60" y="86" width="90" height="74" rx="20"/><rect x="34" y="94" width="23" height="64" rx="11.5" transform="rotate(-38 46 150)"/></clipPath>
+  <linearGradient id="${id}s" x1="0" x2="1"><stop offset="0" stop-color="#fff" stop-opacity=".22"/><stop offset=".5" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".12"/></linearGradient></defs>
+  <ellipse cx="104" cy="190" rx="54" ry="6" fill="#000" opacity=".08"/>
+  <g clip-path="url(#${id})"><rect width="200" height="200" fill="${L}"/><rect y="98" width="200" height="70" fill="${C}"/><rect x="0" y="0" width="200" height="${o.full?200:60}" fill="${C}"/><path d="M60 98 Q105 ${o.full?98:108} 150 98" stroke="#000" stroke-opacity=".12" stroke-width="2" fill="none"/><rect width="200" height="200" fill="url(#${id}s)"/>
+  <path d="M83 70v40M106 64v46M129 70v40" stroke="#000" stroke-opacity=".14" stroke-width="2"/></g>
+  <rect x="66" y="150" width="78" height="38" rx="7" fill="${K}"/><path d="M72 158v24M80 158v24M88 158v24M96 158v24M104 158v24M112 158v24M120 158v24M128 158v24M136 158v24" stroke="#000" stroke-opacity=".13" stroke-width="2"/>${o.tag?`<rect x="94" y="164" width="22" height="9" rx="2" fill="${o.tag}"/>`:""}</svg>`},
+ helmet(o){const c=o.c;return `<svg viewBox="0 0 200 200" aria-hidden="true"><ellipse cx="102" cy="168" rx="70" ry="8" fill="#000" opacity=".08"/>
+  <path d="M38 138C38 78 70 46 102 46s64 32 64 92z" fill="${c}"/><path d="M38 138C38 78 70 46 102 46c-18 10-34 40-36 92z" fill="#fff" opacity=".22"/>
+  <path d="M96 47q6-2 12 0l6 91H90z" fill="#000" opacity=".07"/><path d="M60 138c4-34 16-62 30-80" stroke="#000" stroke-opacity=".1" stroke-width="3" fill="none"/>
+  <path d="M26 140q76-14 162-2l2 12q-84-10-166 4z" fill="${c}"/><path d="M26 140q76-14 162-2l2 12q-84-10-166 4z" fill="#000" opacity=".14"/>
+  <path d="M150 140q22 2 40 0l-4 10q-20 2-38-2z" fill="${c}"/><rect x="76" y="100" width="22" height="12" rx="3" fill="#fff" opacity=".5"/><text x="87" y="109" text-anchor="middle" font-size="7" font-family="Arial" font-weight="700" fill="#333">MSA</text></svg>`},
+ boot(o){return `<svg viewBox="0 0 200 200" aria-hidden="true"><ellipse cx="114" cy="182" rx="74" ry="6" fill="#000" opacity=".1"/>
+  <path d="M60 32h60l2 80q34 8 52 22 10 8 8 24H52v-38q4-40 8-88z" fill="${o.c}"/>
+  <path d="M60 32h18l-4 126H52v-38z" fill="#fff" opacity=".1"/>
+  <path d="M138 120q30 8 42 26 2 6 2 12h-46z" fill="#000" opacity=".16"/>
+  <rect x="56" y="24" width="68" height="16" rx="8" fill="${o.trim}"/>
+  <g stroke="${o.lace}" stroke-width="3" stroke-linecap="round">${[44,56,68,80,92,104].map(y=>`<path d="M104 ${y} 122 ${y+8}M104 ${y+8} 122 ${y}"/>`).join("")}</g>
+  ${[44,56,68,80,92,104,112].map(y=>`<circle cx="120" cy="${y}" r="2.4" fill="#c9ccd1"/>`).join("")}
+  <path d="M60 116h62" stroke="#000" stroke-opacity=".15" stroke-width="2"/>
+  <rect x="48" y="156" width="138" height="20" rx="6" fill="${o.sole}"/><path d="M56 176v-6M70 176v-6M84 176v-6M98 176v-6M112 176v-6M126 176v-6M140 176v-6M154 176v-6M168 176v-6" stroke="#000" stroke-opacity=".35" stroke-width="3"/>
+  ${o.band?`<rect x="48" y="150" width="138" height="6" fill="${o.band}"/>`:""}</svg>`},
+ rboot(o){return `<svg viewBox="0 0 200 200" aria-hidden="true"><ellipse cx="116" cy="184" rx="70" ry="6" fill="#000" opacity=".1"/>
+  <path d="M68 18h56l2 106q34 6 50 20 8 8 6 20H62z" fill="${o.c}"/><path d="M68 18h16l-4 146H62z" fill="#fff" opacity=".12"/>
+  <rect x="64" y="14" width="64" height="14" rx="4" fill="${o.top}"/><path d="M140 128q28 6 40 22 2 6 2 14h-44z" fill="#000" opacity=".2"/>
+  <rect x="58" y="162" width="128" height="18" rx="6" fill="${o.sole}"/><path d="M66 180v-6M80 180v-6M94 180v-6M108 180v-6M122 180v-6M136 180v-6M150 180v-6M164 180v-6" stroke="#000" stroke-opacity=".35" stroke-width="3"/></svg>`},
+ glasses(o){return `<svg viewBox="0 0 200 200" aria-hidden="true"><ellipse cx="100" cy="150" rx="70" ry="6" fill="#000" opacity=".08"/>
+  <path d="M172 88q12-4 22 2l-2 6q-10-4-20-1z" fill="${o.frame}"/>
+  <path d="M26 86q74-24 148 0 4 34-20 44-28 10-44-12-6-8-14 0-16 22-44 12-24-10-26-44z" fill="${o.lens}" opacity=".78"/>
+  <path d="M26 86q74-24 148 0" stroke="${o.frame}" stroke-width="7" fill="none" stroke-linecap="round"/>
+  <path d="M40 92q20-6 40-6" stroke="#fff" stroke-opacity=".6" stroke-width="4" fill="none" stroke-linecap="round"/><path d="M118 88q16 0 34 4" stroke="#fff" stroke-opacity=".45" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <path d="M92 112q8-8 16 0" stroke="${o.frame}" stroke-width="4" fill="none"/></svg>`},
+ goggle(o){return `<svg viewBox="0 0 200 200" aria-hidden="true"><ellipse cx="100" cy="150" rx="74" ry="6" fill="#000" opacity=".08"/>
+  <rect x="6" y="96" width="34" height="14" rx="4" fill="${o.strap}"/><rect x="160" y="96" width="34" height="14" rx="4" fill="${o.strap}"/>
+  <rect x="30" y="70" width="140" height="66" rx="30" fill="${o.frame}"/>
+  <rect x="40" y="78" width="120" height="50" rx="24" fill="${o.lens}" opacity=".85"/>
+  <path d="M52 92q24-10 50-8" stroke="#fff" stroke-opacity=".6" stroke-width="4" fill="none" stroke-linecap="round"/>
+  ${[60,80,120,140].map(x=>`<circle cx="${x}" cy="74" r="2" fill="#000" opacity=".25"/>`).join("")}<path d="M92 128q8-8 16 0" stroke="${o.frame}" stroke-width="6" fill="none"/></svg>`},
+ vest(){return `<svg viewBox="0 0 200 200" aria-hidden="true"><ellipse cx="100" cy="186" rx="60" ry="6" fill="#000" opacity=".08"/>
+  <path d="M62 24h22q16 26 32 0h22l12 30-8 18v104H58V72l-8-18z" fill="#1f3a5a"/><path d="M100 50v126" stroke="#0f2236" stroke-width="3"/>
+  <rect x="58" y="110" width="84" height="10" fill="#d9dee4"/><rect x="58" y="140" width="84" height="10" fill="#d9dee4"/>
+  <rect x="68" y="84" width="22" height="18" rx="2" fill="#2a4a6f"/><rect x="110" y="84" width="22" height="18" rx="2" fill="#2a4a6f"/></svg>`},
+ resp(){return `<svg viewBox="0 0 200 200" aria-hidden="true"><ellipse cx="100" cy="168" rx="62" ry="6" fill="#000" opacity=".08"/>
+  <path d="M60 80q40-34 80 0l8 40q-8 34-48 40-40-6-48-40z" fill="#3a434e"/><path d="M76 82q24-18 48 0" stroke="#5b6672" stroke-width="5" fill="none"/>
+  <circle cx="56" cy="122" r="26" fill="#e4570f"/><circle cx="56" cy="122" r="16" fill="#c44708"/><circle cx="144" cy="122" r="26" fill="#e4570f"/><circle cx="144" cy="122" r="16" fill="#c44708"/>
+  <rect x="88" y="122" width="24" height="22" rx="6" fill="#2a3139"/></svg>`},
+ kit(){return `<svg viewBox="0 0 200 200" aria-hidden="true"><ellipse cx="100" cy="170" rx="70" ry="6" fill="#000" opacity=".08"/>
+  <path d="M80 50v-12h40v12" stroke="#b33a2c" stroke-width="8" fill="none"/><rect x="36" y="50" width="128" height="112" rx="14" fill="#d84a3a"/>
+  <rect x="36" y="50" width="128" height="20" rx="10" fill="#000" opacity=".1"/><rect x="88" y="78" width="24" height="64" rx="4" fill="#fff"/><rect x="68" y="98" width="64" height="24" rx="4" fill="#fff"/></svg>`},
+ harness(){return `<svg viewBox="0 0 200 200" aria-hidden="true"><ellipse cx="100" cy="184" rx="60" ry="6" fill="#000" opacity=".08"/>
+  <path d="M70 20l60 120M130 20 70 140" stroke="#e4570f" stroke-width="12" stroke-linecap="round"/><path d="M60 140h80" stroke="#1f2a36" stroke-width="12" stroke-linecap="round"/>
+  <path d="M70 140l-6 36M130 140l6 36" stroke="#1f2a36" stroke-width="10" stroke-linecap="round"/><path d="M88 56q12-8 24 0l-4 20h-16z" fill="none" stroke="#9aa3ad" stroke-width="6"/><circle cx="100" cy="80" r="5" fill="#9aa3ad"/></svg>`}
+};
+const art=a=>ART[a.t](a);
+
+/* ---------- Datos: productos reales del catálogo gygthomas.cl. Precios y stock referenciales ---------- */
+const CATS=[
+ {id:"guantes",n:"Guantes",art:{t:"glove",liner:"#5a6470",coat:"#2c3138"},subs:["Uso general","Anticorte","Químicos","Arco eléctrico"]},
+ {id:"calzado",n:"Calzado",art:{t:"boot",c:"#6b4a2f",trim:"#3b2a1c",lace:"#e8c37a",sole:"#222"},subs:["Botas térmicas","Botas de agua"]},
+ {id:"vestuario",n:"Vestuario",art:{t:"vest"},subs:["Parkas térmicas","Buzos ignífugos","Chalecos geólogos","Camisas antiácidas","Primeras capas"]},
+ {id:"respiratoria",n:"Protección respiratoria",art:{t:"resp"},subs:["Respiradores","Filtros","Mascarillas","Accesorios"]},
+ {id:"visual",n:"Protección visual",art:{t:"glasses",lens:"#7f8a96",frame:"#1d2329"},subs:["Lentes","Antiparras","Lavaojos","Sobreópticos"]},
+ {id:"cabeza",n:"Protección cabeza",art:{t:"helmet",c:"#f2f2ee"},subs:["Cascos","Arnés","Barbiquejos","Viseras"]},
+ {id:"rescate",n:"Rescate",art:{t:"kit"},subs:["Botiquines","Extintores","Camillas y tablas","Control de derrames"]},
+ {id:"altura",n:"Trabajo en altura",art:{t:"harness"},subs:["Arnés","Cabos de vida","Anclajes","Amortiguadores"]}
+];
+const GL=["6","7","8","9","10","11"], BT=["37","38","39","40","41","42","43","44","45"];
+const P=[
+ {id:"hf800",c:"guantes",sub:"Uso general",b:"Ansell",n:"Guante HyFlex 11-800",code:"Ansell 11-800",p:5990,s:420,sizes:GL,sl:"Talla",art:{t:"glove",liner:"#7d8792",coat:"#30353c",cuff:"#7d8792",tag:"#2f6fb1"},
+  norms:["Dermatest®","ZONZ™ Comfort Fit"],badge:"Más vendido",
+  lead:"Guante de uso diario con recubrimiento de espuma de nitrilo. Transpirable y con agarre firme en condiciones secas o ligeramente aceitosas.",
+  specs:[["Recubrimiento","Espuma de nitrilo"],["Tecnología","ZONZ™ Comfort Fit"],["Certificación piel","Dermatest®"],["Uso recomendado","Montaje, logística, mantenimiento"]]},
+ {id:"hf939",c:"guantes",sub:"Anticorte",b:"Ansell",n:"Guante HyFlex 11-939",code:"Ansell 11-939",p:11990,s:160,sizes:GL,sl:"Talla",art:{t:"glove",liner:"#2f4f7a",coat:"#1d2228",cuff:"#2f4f7a"},
+  norms:["Galga 18","RIPEL™","FORTIX™"],
+  lead:"Protección contra laceraciones y barrera contra fluidos industriales en un guante muy liviano. Evita que el aceite toque la piel.",
+  specs:[["Galga","18"],["Tecnología barrera","RIPEL™"],["Recubrimiento","FORTIX™, hasta 12 veces más duración en el pliegue del pulgar"],["Agarre","ANSELL GRIP™"],["Libre de","Silicona y DMF"]]},
+ {id:"at735",c:"guantes",sub:"Químicos",b:"Ansell",n:"Guante AlphaTec 58-735",code:"Ansell 58-735",p:17990,s:70,sizes:GL,sl:"Talla",art:{t:"glove",liner:"#e8c547",coat:"#2e6a55",cuff:"#2e6a55",full:true},
+  norms:["ISO corte C","FDA","Oeko-Tex"],badge:"Nuevo",
+  lead:"Protección química de nitrilo con resistencia al corte integrada mediante tecnología INTERCEPT™. Elimina la necesidad del doble enguantado.",
+  specs:[["Resistencia al corte","ISO C (INTERCEPT™)"],["Material","Nitrilo"],["Agarre","ANSELL GRIP™"],["Forro","Alta visibilidad, alerta si la barrera se compromete"],["Aprobaciones","Oeko-Tex · FDA"]]},
+ {id:"aa813",c:"guantes",sub:"Arco eléctrico",b:"Ansell",n:"Guante ActivArmr 80-813",code:"Ansell 80-813",p:23990,s:9,sizes:GL,sl:"Talla",art:{t:"glove",liner:"#c99a2e",coat:"#262a30",cuff:"#c99a2e"},
+  norms:["Arco Cat. 2","9,4 cal/cm²","Corte C"],
+  lead:"Resistencia inherente a la llama con protección contra arco eléctrico. Forro galga 13 con DuPont™ Kevlar®.",
+  specs:[["Arco eléctrico","Categoría 2 · 9,4 cal/cm²"],["Forro","Galga 13 con DuPont™ Kevlar®"],["Corte","Nivel C"],["Recubrimiento","Espuma, agarre en seco, húmedo o con aceite"]]},
+ {id:"pf0110",c:"calzado",sub:"Botas térmicas",b:"Proflex",n:"Bota térmica PF 0110 C aislante",code:"Proflex PF 0110 C",p:69990,s:38,sizes:BT,sl:"Número",art:{t:"boot",c:"#3a3f45",trim:"#24282c",lace:"#e4570f",sole:"#1a1c1f",band:"#e4570f"},
+  norms:["S3","Thinsulate™ 200 g","Aislante eléctrica"],badge:"Faena",
+  lead:"Bota de seguridad para condiciones extremas, inyectada directamente al cuero Florex Water Resistant. Sin componentes metálicos.",
+  specs:[["Clasificación","S3"],["Aislamiento térmico","Thinsulate™ 200 g"],["Puntera","Composite"],["Plantilla","Anticlavo de poliamida"],["Planta","PU/PU antideslizante, aislante eléctrica"],["Forro","Cuero gamuzado"]]},
+ {id:"anton",c:"calzado",sub:"Botas térmicas",b:"Climber",n:"Bota térmica Anton",code:"Climber Anton",p:89990,s:14,sizes:BT,sl:"Número",art:{t:"boot",c:"#8a6a45",trim:"#4a3726",lace:"#2b2b2b",sole:"#262626"},
+  norms:["Thinsulate™ 400 g","Puntera composite","Norma NCh"],
+  lead:"Bota térmica para climas extremos con acordonado rotatorio CLS para ajuste preciso y descalce rápido.",
+  specs:[["Aislamiento térmico","Thinsulate™ 400 g"],["Cuero","Nubuck hidrofugado"],["Ajuste","Sistema CLS rotatorio"],["Puntera","Composite"],["Plantilla","Anticlavo textil, según norma NCh"]]},
+ {id:"pvcm",c:"calzado",sub:"Botas de agua",b:"Mitton",n:"Bota PVC punta y planta acero",code:"Mitton PVC",p:16990,s:240,sizes:BT,sl:"Número",art:{t:"rboot",c:"#22272c",top:"#e4570f",sole:"#141618"},
+  norms:["NCh 772/2"],
+  lead:"Bota de PVC de alta resistencia con puntera y planta de acero templado. Refuerzos en talón, tobillo y puntera.",
+  specs:[["Norma","NCh 772/2"],["Puntera y planta","Acero templado"],["Forro","Poliéster"],["Uso recomendado","Construcción, agricultura, pesca, industria"]]},
+ {id:"falcon",c:"visual",sub:"Lentes",b:"Mitton",n:"Lente de seguridad Falcon",code:"Mitton Falcon",p:4290,s:600,sizes:["Gris","Claro"],sl:"Mica",art:{t:"glasses",lens:"#5d6873",frame:"#1d2329"},
+  norms:["EN ISO 16321-1","UV 99,9 %"],
+  lead:"Policarbonato resistente a impactos con protección UV y cordón de sujeción. Reduce la exposición al polvo.",
+  specs:[["Certificación","CE EN ISO 16321-1"],["Material","Policarbonato"],["Protección UV","99,9 %"],["Temperatura de uso","−5 °C a 55 °C"],["Incluye","Cordón de sujeción"]]},
+ {id:"newwin",c:"visual",sub:"Antiparras",b:"Steelpro",n:"Antiparra New Win AF",code:"Steelpro New Win AF",p:5990,s:130,art:{t:"goggle",frame:"#2b3138",lens:"#b9d2e6",strap:"#1d2329"},
+  norms:["ANSI Z87.1-2003","Antiempaño"],
+  lead:"Antiparra reforzada con sello perimetral de PVC hipoalergénico contra polvo y salpicaduras químicas.",
+  specs:[["Certificación","ANSI Z87.1-2003"],["Lente","Policarbonato, antiempaño y antirrayas"],["Protección UV","99,9 %"],["Strap","Elástico, libre de látex"]]},
+ {id:"vgard",c:"cabeza",sub:"Cascos",b:"MSA",n:"Casco V-Gard",code:"MSA V-Gard",p:14990,s:210,sizes:["Blanco","Gris","Amarillo","Azul"],sl:"Color",art:{t:"helmet",c:"#f3f3ef"},
+  norms:["Tipo I Clase E","30.000 V"],badge:"Más vendido",
+  lead:"Casco dieléctrico de polietileno con ranuras laterales para accesorios y soporte para lámpara sin perforaciones.",
+  specs:[["Clasificación","Tipo I (impacto vertical) · Clase E"],["Rigidez dieléctrica","Hasta 30.000 V"],["Material","Polietileno"],["Suspensión","Cintas de nylon, ajuste Staz-On"]]}
+];
+const HELMET_COL={Blanco:"#f3f3ef",Gris:"#8f979f",Amarillo:"#f2c230",Azul:"#2f63b0"};
+const LENS_COL={Gris:"#5d6873",Claro:"#cfe0ec"};
+const pArt=(p,opt)=>{const a={...p.art};if(p.id==="vgard"&&opt)a.c=HELMET_COL[opt];if(p.id==="falcon"&&opt)a.lens=LENS_COL[opt];return art(a)};
+/* Despacho referencial por región desde Santiago */
+const REG=[["Arica y Parinacota",6990,"3–4"],["Tarapacá",6990,"3–4"],["Antofagasta",6490,"2–3"],["Atacama",5990,"2–3"],["Coquimbo",4990,"2"],["Valparaíso",3990,"1–2"],["Metropolitana",2990,"1 día hábil"],["O'Higgins",3990,"1–2"],["Maule",4490,"2"],["Ñuble",4990,"2"],["Biobío",4990,"2"],["La Araucanía",5490,"2–3"],["Los Ríos",5490,"3"],["Los Lagos",5990,"3"],["Aysén",8990,"4–5"],["Magallanes",8990,"4–5"]];
+const TIERS=[[1,0],[10,.05],[50,.10]];
+const pct=q=>q>=50?.10:q>=10?.05:0;
+const clp=n=>"$"+Math.round(n).toLocaleString("es-CL");
+const IC={
+ arrow:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>',
+ truck:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M2 6h12v10H2zM14 10h4l3 3v3h-7z"/><circle cx="6" cy="18" r="1.8"/><circle cx="17" cy="18" r="1.8"/></svg>',
+ doc:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5M9 13h7M9 17h5"/></svg>',
+ box:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="m3 7 9-4 9 4v10l-9 4-9-4z"/><path d="m3 7 9 4 9-4M12 11v10"/></svg>',
+ tag:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M3 12V4h8l10 10-8 8z"/><circle cx="7.5" cy="8.5" r="1.5"/></svg>',
+ chat:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M4 5h16v11H9l-5 4z"/><path d="M8 10h8"/></svg>',
+ shield:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 3 5 6v5c0 4.5 3 8 7 9.5 4-1.5 7-5 7-9.5V6z"/><path d="m9 12 2 2 4-4"/></svg>',
+ check:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5 9-10"/></svg>',
+ repeat:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12a8 8 0 0 1 14-5.3L20 9M20 4v5h-5M20 12a8 8 0 0 1-14 5.3L4 15M4 20v-5h5"/></svg>'
+};
+
+
+/* ---------- Logo PKW Seguridad (familia visual PKW Repuestos) ---------- */
+function logo(white){const c=white?"#ffffff":"#3d6fb4",b=white?"#ffffff":"#a8c0e2",t=white?"#ffffff":"#3d6fb4";
+ return `<svg viewBox="0 0 290 84" role="img" aria-label="PKW Seguridad"><text x="2" y="54" font-family="Poppins,Arial,sans-serif" font-style="italic" font-weight="800" font-size="60" fill="${c}" letter-spacing="-2">PKW</text>
+ <path d="M150 20h58l-6 9h-58zM144 36h58l-6 9h-58zM138 52h58l-6 9h-58z" fill="${b}" opacity="${white?.85:1}"/>
+ <circle cx="238" cy="42" r="34" fill="#1d2330" stroke="${white?"#fff":"#1d2330"}" stroke-width="3"/><circle cx="238" cy="42" r="27" fill="none" stroke="#5b6475" stroke-width="2"/>
+ <path d="M238 22l-15 6v11c0 10 6.5 17 15 20 8.5-3 15-10 15-20V28z" fill="#3d6fb4"/><path d="m231 41 5 5 10-10" stroke="#fff" stroke-width="3.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+ <text x="4" y="76" font-family="Poppins,Arial,sans-serif" font-style="italic" font-weight="500" font-size="12.5" fill="${t}" letter-spacing="7.2">SEGURIDAD</text></svg>`}
+
+/* ---------- Estado ---------- */
+const S={view:"home",cat:null,sub:null,brands:[],sort:"rel",q:"",pid:null,opt:null,qty:1,img:0,need:false,filt:false,cart:[],doc:"factura",reg:"Metropolitana",ship:"dom"};
+try{const c=JSON.parse(localStorage.getItem("pkwseg-cart")||"[]");if(Array.isArray(c))S.cart=c.filter(l=>P.some(p=>p.id===l.id))}catch(e){}
+const save=()=>{try{localStorage.setItem("pkwseg-cart",JSON.stringify(S.cart))}catch(e){}};
+const $=id=>document.getElementById(id);
+const V=$("view");
+const prod=id=>P.find(p=>p.id===id);
+const catOf=id=>CATS.find(c=>c.id===id);
+const stock=s=>s<=15?`<span class="stk low"><i></i>Quedan ${s} unidades</span>`:`<span class="stk"><i></i>Stock disponible</span>`;
+const esc=s=>s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const strip=svg=>svg.replace(/<\/?svg[^>]*>/g,"");
+$("logo").innerHTML=logo(false);$("flogo").innerHTML=logo(true);
+
+function toast(msg,action){const t=$("toast");t.innerHTML=`<span>${msg}</span>`+(action?`<button type="button" data-a="cart">Ver carro</button>`:"");t.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>t.hidden=true,2800)}
+function count(){$("cn").textContent=S.cart.reduce((a,l)=>a+l.q,0)}
+function nav(){$("nav").innerHTML=`<button type="button" data-a="home" class="${S.view==="home"?"on":""}">Inicio</button>`+CATS.map(c=>`<button type="button" data-cat="${c.id}" class="${S.cat===c.id&&S.view==="cat"?"on":""}">${c.n.replace("Protección ","Prot. ")}</button>`).join("")}
+
+function card(p){
+  return `<article class="pcard">
+   <button class="im" type="button" data-p="${p.id}" aria-label="Ver ${p.n}">${pArt(p)}${p.badge?`<span class="badge">${p.badge}</span>`:""}</button>
+   <div class="bd"><span class="br">${p.b}</span><h3><button type="button" data-p="${p.id}">${p.n}</button></h3><span class="norm">${p.norms.slice(0,2).join(" · ")}</span>
+   <span class="price">${clp(p.p)}</span>${stock(p.s)}
+   ${p.sizes?`<button class="pbtn" type="button" data-p="${p.id}">Elegir ${p.sl.toLowerCase()}</button>`:`<button class="pbtn" type="button" data-quick="${p.id}">Añadir al carro</button>`}</div></article>`;
+}
+
+/* ---------- Vistas ---------- */
+function home(){
+  const L=`<svg viewBox="0 0 200 200" aria-hidden="true">${strip(ART.glove({liner:"#7d8792",coat:"#30353c",cuff:"#7d8792",tag:"#3d6fb4"}))}</svg>`;
+  const R=`<svg viewBox="0 0 200 200" aria-hidden="true">${strip(ART.helmet({c:"#f3f3ef"}))}</svg>`;
+  const feat=["hf800","pf0110","vgard","at735","falcon","pvcm","hf939","newwin"].map(prod);
+  V.innerHTML=`
+  <section class="hero"><div class="wrap"><div class="side">${L}</div>
+    <div class="hero-c"><h1>Seguridad industrial para tu empresa.<span>Compra online. Recibe en todo Chile.</span></h1>
+     <p>Productos de seguridad industrial GyG Thomas, con la experiencia e-commerce de PKW.</p>
+     <div class="finder"><select id="fcat" aria-label="Categoría"><option value="">Todas las categorías</option>${CATS.map(c=>`<option value="${c.id}">${c.n}</option>`).join("")}</select><input id="fq" placeholder="Ej: guante, bota, casco, S3" aria-label="Producto o norma"><button type="button" data-a="finder">Buscar</button></div>
+     <button class="ghost" type="button" data-a="products">Ver productos</button></div>
+    <div class="side">${R}</div></div></section>
+  <section class="feat"><div class="wrap">
+    <div>${IC.box}<p style="margin:0"><b>Desde 1 unidad</b><span>Sin mínimo de compra. Precios por volumen desde 10 unidades.</span></p></div>
+    <div>${IC.doc}<p style="margin:0"><b>Factura empresa</b><span>Boleta o factura electrónica con RUT de tu empresa.</span></p></div>
+    <div>${IC.shield}<p style="margin:0"><b>Marcas</b><span>Ansell, MSA, Proflex, Climber, Mitton y Steelpro, del catálogo GyG Thomas.</span></p></div>
+    <div>${IC.truck}<p style="margin:0"><b>Despacho</b><span>Despachamos a todo Chile. Costo por región visible antes de pagar.</span></p></div>
+  </div></section>
+
+  <section class="cats-sec" id="cats"><div class="wrap sec"><div class="sec-h"><h2>Categorías</h2></div>
+   <div class="cgrid">${CATS.map(c=>{const has=P.some(p=>p.c===c.id);return`<button class="cban" type="button" data-cat="${c.id}"><span class="im">${art(c.art)}</span><span class="tx"><h3>${c.n}</h3><span class="vt">Ver todo ${IC.arrow}</span></span>${has?"":`<span class="soon">Próximamente</span>`}</button>`}).join("")}</div></div></section>
+
+  <section class="wrap sec"><div class="sec-h"><h2>Productos destacados</h2><button class="more" type="button" data-cat="guantes">Ver todos ${IC.arrow}</button></div>
+   <div class="pgrid">${feat.map(card).join("")}</div></section>
+
+  <section class="wrap sec" style="padding-top:8px"><div class="sec-h"><h2>Compra como empresa</h2><p>Sin mínimos, sin esperar una cotización y con costos claros desde el primer clic.</p></div>
+   <div class="bgrid">
+    <div class="bitem">${IC.box}<h3>Desde una unidad</h3><p>Un par de guantes o cien, con el mismo proceso.</p></div>
+    <div class="bitem">${IC.tag}<h3>Precios por volumen</h3><p>Descuento automático desde 10 y 50 unidades, visible en la ficha.</p></div>
+    <div class="bitem">${IC.doc}<h3>Factura empresa</h3><p>RUT, razón social y giro en el mismo pedido.</p></div>
+    <div class="bitem">${IC.truck}<h3>Todo Chile</h3><p>Costo de despacho por región, sin sorpresas al final.</p></div>
+    <div class="bitem">${IC.chat}<h3>Grandes pedidos</h3><p>Cotización formal para dotaciones completas y contratos.</p></div>
+   </div>
+   <div class="cotiz" style="margin-top:28px"><div><h3>¿Necesitas equipar a toda una cuadrilla?</h3><p>Cotización formal para grandes pedidos, contratos y entregas programadas.</p></div><button class="btn btn-a" type="button" data-a="quote">Solicitar cotización</button></div>
+  </section>
+
+  <section class="prov"><div class="wrap sec">
+   <div class="lead"><div><span class="eyebrow">Proveedor de los productos</span><h2>GyG Thomas Safety</h2>
+     <p>Empresa chilena especializada en seguridad industrial y elementos de protección personal, con sucursales en Iquique y Antofagasta y una trayectoria ligada a la minería y la industria del norte del país.</p>
+     <p>Su catálogo combina marcas internacionales de EPP con su línea propia de vestuario técnico, Thomas Workwear.</p></div>
+    <div class="stats"><div><b>385</b><span>productos en su catálogo</span></div><div><b>15</b><span>líneas de EPP</span></div><div><b>2</b><span>sucursales en el norte</span></div></div></div>
+   <div class="bcards">
+    <div class="bcard"><div class="blogo">Ansell</div><p>Guantes HyFlex, AlphaTec y ActivArmr para uso general, químicos, corte y arco eléctrico.</p><button class="wbtn" type="button" data-brand="Ansell">Conocer ${IC.arrow}</button></div>
+    <div class="bcard"><div class="blogo dark">MSA</div><p>Cascos de seguridad V-Gard dieléctricos y accesorios de suspensión.</p><button class="wbtn" type="button" data-brand="MSA">Conocer ${IC.arrow}</button></div>
+    <div class="bcard"><div class="blogo"><span>Proflex<small>Climber</small></span></div><p>Calzado de seguridad térmico con puntera de composite y aislamiento Thinsulate™.</p><button class="wbtn" type="button" data-brand="Proflex">Conocer ${IC.arrow}</button></div>
+    <div class="bcard"><div class="blogo dark"><span>Mitton<small style="color:#9aa3b5">Steelpro</small></span></div><p>Lentes, antiparras y botas de PVC para faena, construcción y talleres.</p><button class="wbtn" type="button" data-brand="Mitton">Conocer ${IC.arrow}</button></div>
+   </div></div></section>`;
+}
+function catView(){
+  const c=catOf(S.cat);let items=P.filter(p=>p.c===c.id);
+  const brands=[...new Set(items.map(p=>p.b))];const subs=[...new Set(items.map(p=>p.sub))];
+  let shown=items.filter(p=>(!S.sub||p.sub===S.sub)&&(!S.brands.length||S.brands.includes(p.b)));
+  if(S.sort==="asc")shown.sort((a,b)=>a.p-b.p);if(S.sort==="desc")shown.sort((a,b)=>b.p-a.p);
+  V.innerHTML=`<div class="crumbs"><div class="wrap"><button type="button" data-a="home">Inicio</button><span>›</span><b>${c.n}</b></div></div>
+  <div class="wrap"><div class="ch"><h1>${c.n}</h1>${items.length?`<div class="right"><button class="fbtn" type="button" data-a="filters"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M3 5h18l-7 8v6l-4 2v-8z"/></svg>Filtros</button></div>`:""}</div>
+  ${items.length?`<div class="layout">
+   ${S.filt?`<div class="fpanel"><div><h4>Tipo</h4>${subs.map(s=>`<label class="fopt"><input type="radio" name="sub" value="${s}" ${S.sub===s?"checked":""}>${s} <small>(${items.filter(p=>p.sub===s).length})</small></label>`).join("")}<label class="fopt"><input type="radio" name="sub" value="" ${!S.sub?"checked":""}>Todos</label></div>
+    <div><h4>Marca</h4>${brands.map(b=>`<label class="fopt"><input type="checkbox" name="brand" value="${b}" ${S.brands.includes(b)?"checked":""}>${b} <small>(${items.filter(p=>p.b===b).length})</small></label>`).join("")}</div>
+    <div><h4>Ordenar</h4><select class="sel" id="sort" aria-label="Ordenar" style="width:100%"><option value="rel">Más relevantes</option><option value="asc">Menor precio</option><option value="desc">Mayor precio</option></select></div></div>`:""}
+   <div class="chips">${["",...subs].map(s=>`<button type="button" data-sub="${s}" class="${(S.sub||"")===s?"on":""}">${s||"Todos"}</button>`).join("")}</div>
+   <div class="pgrid ${shown.length<4?"c3":""}">${shown.map(card).join("")}</div>${shown.length?"":`<div class="empty"><h3>Sin resultados con estos filtros</h3></div>`}</div>`
+  :`<div class="empty"><div style="width:140px;margin:0 auto 8px">${art(c.art)}</div><h3>${c.n} estará disponible en la tienda</h3><p style="max-width:54ch;margin:0 auto">Esta demo desarrolla en detalle Guantes y Calzado. En la implementación se publicarán las líneas de ${c.n.toLowerCase()} de GyG Thomas:</p>
+    <div class="subs">${c.subs.map(s=>`<span>${s}</span>`).join("")}</div><div class="cta"><button class="btn btn-a" type="button" data-cat="guantes">Ver guantes</button><button class="btn btn-o" type="button" data-cat="calzado">Ver calzado</button></div></div>`}</div>`;
+  if($("sort"))$("sort").value=S.sort;
+}
+function searchView(){
+  const q=S.q.toLowerCase();const r=P.filter(p=>(!S.scat||p.c===S.scat)&&(!q||(p.n+" "+p.b+" "+p.code+" "+p.norms.join(" ")+" "+catOf(p.c).n+" "+p.sub).toLowerCase().includes(q)));
+  const label=S.q?`“${esc(S.q)}”`:catOf(S.scat)?catOf(S.scat).n:"Todos";
+  V.innerHTML=`<div class="crumbs"><div class="wrap"><button type="button" data-a="home">Inicio</button><span>›</span><b>Búsqueda</b></div></div>
+  <div class="wrap"><div class="ch"><h1>Resultados</h1><p>${r.length} producto${r.length===1?"":"s"} para ${label}</p></div>
+  ${r.length?`<div class="pgrid" style="padding-bottom:64px">${r.map(card).join("")}</div>`:`<div class="empty"><h3>No encontramos ${label}</h3><p>Prueba con “guante”, “bota”, “casco”, “Ansell” o una norma como “S3”.</p></div>`}</div>`;
+}
+function pdView(){
+  const p=prod(S.pid),c=catOf(p.c),q=S.qty,d=pct(q),u=p.p*(1-d),r=REG.find(x=>x[0]===S.reg);
+  const sheet=`<svg viewBox="0 0 200 200" aria-hidden="true"><rect x="30" y="34" width="140" height="132" fill="#fff" stroke="#e4e5e9"/><rect x="30" y="34" width="140" height="18" fill="#3d6fb4"/>${p.specs.slice(0,5).map((s,i)=>`<rect x="42" y="${64+i*20}" width="${44+((i*37)%50)}" height="6" fill="#8a8c96" opacity=".5"/><rect x="118" y="${64+i*20}" width="40" height="6" fill="#2b2d3a" opacity=".7"/>`).join("")}</svg>`;
+  const views=[pArt(p,S.opt),pArt(p,S.opt).replace('<svg','<svg style="transform:scale(1.7) translate(4%,6%)"'),sheet];
+  const capt=["Imagen ilustrativa · fotografía oficial en producción","Detalle","Ficha técnica"];
+  V.innerHTML=`<div class="crumbs"><div class="wrap"><button type="button" data-a="home">Inicio</button><span>›</span><button type="button" data-cat="${c.id}">${c.n}</button><span>›</span><b>${p.n}</b></div></div>
+  <div class="wrap"><div class="pd">
+   <div class="gal"><div class="thumbs">${views.map((v,i)=>`<button type="button" data-img="${i}" class="${S.img===i?"on":""}" aria-label="Vista ${i+1}">${v}</button>`).join("")}</div>
+    <div class="main-im">${views[S.img]}<span class="cap">${capt[S.img]}</span>${p.badge?`<span class="badge">${p.badge}</span>`:""}</div></div>
+   <div class="pinfo ${S.need?"need":""}"><span class="code">${p.b} · Código <b>${p.code}</b></span><h1>${p.n}</h1><p class="lead">${p.lead}</p>
+    <div class="nrow">${p.norms.map(n=>`<span class="norm">${n}</span>`).join("")}</div>
+    <div class="bigp"><span class="price">${clp(u)}</span><small>${d?`Unitario con ${d*100} % por volumen · `:""}IVA incluido · precio referencial</small>${stock(p.s)}</div>
+    ${p.sizes?`<div><div class="lab">${p.sl}${S.opt?`<span>Seleccionada: ${S.opt}</span>`:`<span>Elige una opción</span>`}</div><div class="sizes">${p.sizes.map(o=>`<button type="button" data-opt="${o}" class="${S.opt===o?"on":""}">${o}</button>`).join("")}</div>${S.need?`<div class="hint">Elige ${p.sl.toLowerCase()} para añadir al carro.</div>`:""}</div>`:""}
+    <div><div class="lab">Precio por volumen<span>Sin mínimo de compra</span></div><div class="tiers">${TIERS.map(([m,t],i)=>{const nx=TIERS[i+1];const on=q>=m&&(!nx||q<nx[0]);return`<div class="${on?"on":""}"><b>${clp(p.p*(1-t))}</b>${nx?`${m}–${nx[0]-1}`:`${m}+`} un.${t?` · −${t*100} %`:""}</div>`}).join("")}</div></div>
+    <div><div class="lab">Cantidad</div><div class="qrow"><div class="step"><button type="button" data-a="qminus" aria-label="Restar">−</button><input id="qty" inputmode="numeric" value="${q}" aria-label="Cantidad"><button type="button" data-a="qplus" aria-label="Sumar">+</button></div>
+      <button class="btn btn-a" type="button" data-a="add">Añadir al carro · ${clp(u*q)}</button></div></div>
+    <div class="shipq">${IC.truck}<span>Despacho a</span><select class="sel" id="regP" aria-label="Región de despacho">${REG.map(x=>`<option ${x[0]===S.reg?"selected":""}>${x[0]}</option>`).join("")}</select><b>${clp(r[1])}</b><span>· ${r[2].includes("día")?r[2]:r[2]+" días hábiles"}</span></div>
+   </div></div>
+  <div class="specs"><div><h3>Descripción</h3><p>${p.lead}</p><p class="note">Información técnica tomada del catálogo publicado por GyG Thomas. Precio, stock y plazos son referenciales para esta demo.</p></div>
+   <div><h3>Características técnicas</h3>${p.specs.map(s=>`<div class="kv"><span>${s[0]}</span><span>${s[1]}</span></div>`).join("")}<div class="kv"><span>Marca</span><span>${p.b}</span></div><div class="kv"><span>Proveedor</span><span>GyG Thomas Safety</span></div></div></div>
+  <section style="padding-bottom:64px"><div class="sec-h"><h2>También te puede servir</h2></div><div class="pgrid">${P.filter(x=>x.c===p.c&&x.id!==p.id).concat(P.filter(x=>x.c!==p.c)).slice(0,4).map(card).join("")}</div></section></div>`;
+}
+function totals(){
+  const sub=S.cart.reduce((a,l)=>a+prod(l.id).p*(1-pct(l.q))*l.q,0);
+  const list=S.cart.reduce((a,l)=>a+prod(l.id).p*l.q,0);
+  const r=REG.find(x=>x[0]===S.reg);const ship=S.cart.length?(S.ship==="ret"?0:r[1]):0;
+  return{sub,save:list-sub,ship,tot:sub+ship,days:r[2]};
+}
+function lineHTML(l,i){const p=prod(l.id),d=pct(l.q),u=p.p*(1-d);
+  return `<div class="li"><div class="th">${pArt(p,l.o)}</div><div><h4>${p.n}</h4><div class="meta">${p.b}${l.o?` · ${p.sl} ${l.o}`:""} · ${clp(u)} c/u${d?` <span style="color:var(--ok)">(−${d*100} %)</span>`:""}</div>
+  <div class="row"><div class="step"><button type="button" data-dec="${i}" aria-label="Restar">−</button><input data-set="${i}" inputmode="numeric" value="${l.q}" aria-label="Cantidad"><button type="button" data-inc="${i}" aria-label="Sumar">+</button></div><span class="lp">${clp(u*l.q)}</span></div>
+  <button class="rm" type="button" data-rm="${i}">Eliminar</button></div></div>`}
+function drawer(){
+  $("toast").hidden=true;const t=totals();
+  $("layer").innerHTML=`<div class="ov" data-close="1"><aside class="drawer" role="dialog" aria-label="Carro de compras">
+   <div class="dh"><h2>Resumen del pedido</h2><button class="x" type="button" data-close="1" aria-label="Cerrar">×</button></div>
+   ${S.cart.length?`<div class="dl">${S.cart.map(lineHTML).join("")}</div>
+   <div class="df"><div class="tr"><span>Subtotal</span><span>${clp(t.sub)}</span></div>${t.save?`<div class="tr save"><span>Ahorro por volumen</span><span>−${clp(t.save)}</span></div>`:""}
+   <div class="tr mut"><span>Despacho ${S.reg}</span><span>${clp(t.ship)}</span></div><div class="tr tot"><span>Total</span><span>${clp(t.tot)}</span></div>
+   <button class="btn btn-a" type="button" data-a="review" style="margin-top:6px">Revisar pedido</button><button class="btn btn-o" type="button" data-close="1">Seguir comprando</button></div>`
+   :`<div class="de"><div><p>Su carro de compras está vacío.</p><button class="btn btn-a" type="button" data-cat="guantes">Ver guantes</button></div></div>`}</aside></div>`;
+}
+function review(){
+  if(!S.cart.length){S.view="home";return render()}
+  const t=totals();
+  V.innerHTML=`<div class="crumbs"><div class="wrap"><button type="button" data-a="home">Inicio</button><span>›</span><b>Revisar pedido</b></div></div>
+  <div class="wrap"><div class="ch"><h1>Revisar pedido</h1><p>Confirma productos, documento y despacho.</p></div>
+  <div class="rv"><div>
+   <section class="box"><h3><i>1</i>Productos</h3>${S.cart.map(lineHTML).join("")}</section>
+   <section class="box"><h3><i>2</i>Documento tributario</h3><div class="seg"><button type="button" data-doc="factura" class="${S.doc==="factura"?"on":""}">Factura</button><button type="button" data-doc="boleta" class="${S.doc==="boleta"?"on":""}">Boleta</button></div>
+    <div class="fg">${S.doc==="factura"?`<label>RUT empresa<input id="f-rut" value="76.543.210-K"></label><label>Razón social<input id="f-rs" value="Mantenciones del Norte SpA"></label><label class="full">Giro<input id="f-giro" value="Mantención industrial"></label>`:""}
+    <label>Nombre de contacto<input id="f-nom" value="María González"></label><label>Correo<input id="f-mail" value="compras@ejemplo.cl"></label></div><p class="note" style="margin-top:10px">Datos de ejemplo precargados para la demo.</p></section>
+   <section class="box"><h3><i>3</i>Despacho</h3><div class="fg"><label>Región<select id="reg">${REG.map(x=>`<option ${x[0]===S.reg?"selected":""}>${x[0]}</option>`).join("")}</select></label><label>Comuna<input id="f-com" value="Quilicura"></label><label class="full">Dirección<input id="f-dir" value="Av. Lo Echevers 550, bodega 4"></label></div>
+    <div class="opts"><label class="opt"><input type="radio" name="ship" value="dom" ${S.ship==="dom"?"checked":""}><span>Despacho a domicilio o faena<small>${t.days.includes("día")?t.days:t.days+" días hábiles"} · referencial</small></span><span class="r">${clp(REG.find(x=>x[0]===S.reg)[1])}</span></label>
+    <label class="opt"><input type="radio" name="ship" value="ret" ${S.ship==="ret"?"checked":""}><span>Retiro en bodega PKW<small>Coordinación por correo</small></span><span class="r">Gratis</span></label></div></section>
+  </div>
+  <aside class="sumbox"><section class="box"><h3>Resumen</h3>
+   <div class="tr"><span>Productos (${S.cart.reduce((a,l)=>a+l.q,0)} un.)</span><span>${clp(t.sub+t.save)}</span></div>${t.save?`<div class="tr save"><span>Descuento por volumen</span><span>−${clp(t.save)}</span></div>`:""}
+   <div class="tr"><span>Despacho</span><span>${t.ship?clp(t.ship):"Gratis"}</span></div><div class="tr mut"><span>IVA incluido</span><span>${clp(t.tot-t.tot/1.19)}</span></div>
+   <div class="tr tot" style="border-top:1px solid var(--line);margin-top:8px;padding-top:12px"><span>Total</span><span>${clp(t.tot)}</span></div>
+   <button class="btn btn-a" type="button" data-a="confirm" style="width:100%;margin-top:14px">Confirmar pedido</button>
+   <p class="note" style="margin-top:10px;text-align:center">Demo: no se realiza ningún cobro. En producción el pago se procesa con Webpay o Mercado Pago.</p></section>
+   <div class="future">${IC.repeat}<span><b>Próxima etapa: Repetir compra.</b> Las empresas podrán volver a pedir una compra anterior ajustando tallas y cantidades, y guardar listas de reposición de EPP.</span></div></aside></div></div>`;
+}
+function confirmView(){
+  const t=totals(),n="PKS-"+String(Date.now()).slice(-6);
+  V.innerHTML=`<div class="wrap ok"><div class="ck">${IC.check.replace('<svg','<svg width="32" height="32"')}</div><span class="code">Pedido ${n} · simulación</span><h1>Así se vería un pedido confirmado</h1>
+   <p>Total ${clp(t.tot)} con ${S.doc==="factura"?"factura electrónica":"boleta electrónica"} y ${S.ship==="ret"?"retiro en bodega":"despacho a "+S.reg}. No se realizó ninguna compra.</p>
+   <div class="flow"><div><b>1. Pago en línea</b>Webpay o Mercado Pago confirma al instante.</div><div><b>2. Orden a GyG</b>El pedido llega al proveedor con tallas y cantidades.</div><div><b>3. Despacho</b>Envío con número de seguimiento.</div><div><b>4. Documento</b>Factura o boleta por correo.</div></div>
+   <button class="btn btn-a" type="button" data-a="restart">Volver al inicio</button></div>`;
+  S.cart=[];save();count();
+}
+function modal(kind){
+  const L=$("layer");
+  if(kind==="acct")L.innerHTML=`<div class="mo" data-close="1"><div class="mbox" role="dialog" aria-label="Mi cuenta"><span class="soon-t">Próxima etapa</span><h2>Cuenta empresa</h2><p>En la demo no hay inicio de sesión. La cuenta empresa está planificada con estas funciones:</p>
+   <ul class="flist"><li>${IC.check}<span><b>Repetir compra:</b> volver a pedir una compra anterior y ajustar tallas o cantidades.</span></li><li>${IC.check}<span><b>Listas de reposición</b> de EPP habituales por cuadrilla o faena.</span></li><li>${IC.check}<span>Historial de pedidos, facturas y seguimiento de despachos.</span></li><li>${IC.check}<span>Varios compradores por empresa con datos de facturación guardados.</span></li></ul>
+   <div class="mclose"><button class="btn btn-a" type="button" data-close="1">Entendido</button></div></div></div>`;
+  if(kind==="quote")L.innerHTML=`<div class="mo" data-close="1"><div class="mbox" role="dialog" aria-label="Solicitar cotización"><h2>Cotización de grandes pedidos</h2><p>Para dotaciones completas, contratos o entregas programadas.</p>
+   <form id="qform"><div class="fg"><label>Empresa<input id="q-emp" value="Constructora Ejemplo SpA"></label><label>RUT<input id="q-rut" value="76.111.222-3"></label><label class="full">Correo<input id="q-mail" value="compras@ejemplo.cl"></label><label class="full">Detalle del pedido<textarea id="q-det">80 pares guante HyFlex 11-800 (tallas 8 a 10), 40 cascos V-Gard blancos, entrega en Antofagasta.</textarea></label></div>
+   <div class="mclose" style="margin-top:16px"><button class="btn btn-o" type="button" data-close="1">Cancelar</button><button class="btn btn-a" type="submit">Enviar solicitud</button></div></form><p id="qmsg" class="note" hidden style="margin-top:12px"></p></div></div>`;
+  if(kind==="menu")L.innerHTML=`<div class="ov left" data-close="1"><nav class="mm" aria-label="Menú"><div class="mh">Menú<button class="x" type="button" data-close="1" aria-label="Cerrar">×</button></div>
+   <button class="it" type="button" data-a="home">Inicio<span>${IC.arrow}</span></button>${CATS.map(c=>`<button class="it" type="button" data-cat="${c.id}">${c.n}<span>${IC.arrow}</span></button>`).join("")}<button class="it" type="button" data-a="acct">Mi cuenta<span>${IC.arrow}</span></button><button class="it" type="button" data-a="quote">Cotizar pedido grande<span>${IC.arrow}</span></button></nav></div>`;
+}
+function close(){$("layer").innerHTML=""}
+function render(top=true){nav();({home,cat:catView,search:searchView,pd:pdView,review,confirm:confirmView}[S.view]||home)();count();if(top)window.scrollTo(0,0)}
+function goCat(id){close();S.view="cat";S.cat=id;S.sub=null;S.brands=[];S.sort="rel";S.filt=false;render()}
+function goProd(id){close();S.view="pd";S.pid=id;S.opt=null;S.qty=1;S.img=0;S.need=false;render()}
+function goSearch(q,scat){close();S.q=q||"";S.scat=scat||"";S.view="search";S.cat=null;render()}
+function addToCart(id,o,q){const ex=S.cart.find(l=>l.id===id&&l.o===o);ex?ex.q+=q:S.cart.push({id,o,q});save();count()}
+function refreshCartViews(){if($("layer").querySelector(".drawer"))drawer();if(S.view==="review")review()}
+
+/* ---------- Eventos ---------- */
+document.addEventListener("click",e=>{
+  const g=s=>e.target.closest(s);let el;
+  if(e.target.dataset&&e.target.dataset.close){close();return}
+  if((el=g("[data-close]"))&&el.tagName==="BUTTON"){close();return}
+  if(el=g("[data-cat]"))return goCat(el.dataset.cat);
+  if(el=g("[data-p]"))return goProd(el.dataset.p);
+  if(el=g("[data-brand]"))return goSearch(el.dataset.brand);
+  if(el=g("[data-quick]")){addToCart(el.dataset.quick,null,1);toast("Producto añadido al carro",true);return}
+  if(el=g("[data-sub]")){S.sub=el.dataset.sub||null;return render(false)}
+  if(el=g("[data-opt]")){S.opt=el.dataset.opt;S.need=false;return render(false)}
+  if(el=g("[data-img]")){S.img=+el.dataset.img;return render(false)}
+  if(el=g("[data-inc]")){S.cart[+el.dataset.inc].q++;save();count();return refreshCartViews()}
+  if(el=g("[data-dec]")){const l=S.cart[+el.dataset.dec];if(l.q>1)l.q--;save();count();return refreshCartViews()}
+  if(el=g("[data-rm]")){S.cart.splice(+el.dataset.rm,1);save();count();return refreshCartViews()}
+  if(el=g("[data-doc]")){S.doc=el.dataset.doc;return review()}
+  if(el=g("[data-a]")){const a=el.dataset.a;
+    if(a==="home"||a==="restart"){close();S.view="home";S.cat=null;return render()}
+    if(a==="products"){document.getElementById("cats").scrollIntoView({behavior:"smooth"});return}
+    if(a==="finder")return goSearch($("fq").value.trim(),$("fcat").value);
+    if(a==="filters"){S.filt=!S.filt;return render(false)}
+    if(a==="quote"||a==="acct")return modal(a);
+    if(a==="cart"){$("toast").hidden=true;return drawer()}
+    if(a==="qplus"){S.qty++;return render(false)}
+    if(a==="qminus"){S.qty=Math.max(1,S.qty-1);return render(false)}
+    if(a==="add"){const p=prod(S.pid);if(p.sizes&&!S.opt){S.need=true;return render(false)}addToCart(p.id,S.opt,S.qty);toast(`${S.qty} × ${p.n} añadido`,true);return}
+    if(a==="review"){close();S.view="review";return render()}
+    if(a==="confirm"){S.view="confirm";return render()}
+  }
+});
+$("logo").onclick=()=>{close();S.view="home";S.cat=null;render()};
+$("cartBtn").onclick=drawer;
+$("acct").onclick=()=>modal("acct");
+$("menuBtn").onclick=()=>modal("menu");
+document.addEventListener("change",e=>{
+  const t=e.target;
+  if(t.id==="sort"){S.sort=t.value;render(false)}
+  if(t.name==="sub"){S.sub=t.value||null;render(false)}
+  if(t.name==="brand"){S.brands=[...document.querySelectorAll('input[name="brand"]:checked')].map(x=>x.value);render(false)}
+  if(t.id==="regP"){S.reg=t.value;render(false)}
+  if(t.id==="reg"){S.reg=t.value;review()}
+  if(t.name==="ship"){S.ship=t.value;review()}
+  if(t.id==="qty"){S.qty=Math.max(1,parseInt(t.value)||1);render(false)}
+  if(t.dataset.set!==undefined){S.cart[+t.dataset.set].q=Math.max(1,parseInt(t.value)||1);save();count();refreshCartViews()}
+});
+document.addEventListener("keydown",e=>{if(e.key==="Enter"&&e.target.id==="fq")goSearch(e.target.value.trim(),$("fcat").value)});
+document.addEventListener("submit",e=>{if(e.target.id==="qform"){e.preventDefault();const m=$("qmsg");m.hidden=false;m.textContent="Demo: la solicitud no se envía. En producción llegaría al equipo comercial de PKW, que responde con una cotización formal."}});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"){close();$("sugg").hidden=true}});
+/* buscador con sugerencias */
+const qi=$("q"),sg=$("sugg");
+function doSearch(){const v=qi.value.trim();sg.hidden=true;if(!v)return;goSearch(v)}
+qi.addEventListener("input",()=>{const v=qi.value.trim().toLowerCase();if(!v){sg.hidden=true;return}
+  const r=P.filter(p=>(p.n+" "+p.b+" "+p.code+" "+p.norms.join(" ")+" "+catOf(p.c).n).toLowerCase().includes(v)).slice(0,5);
+  sg.innerHTML=r.length?r.map(p=>`<button type="button" data-p="${p.id}"><span class="th">${pArt(p)}</span><span>${p.n}<small>${p.b} · ${clp(p.p)}</small></span></button>`).join("")+`<button type="button" id="seeAll"><span>Ver todos los resultados para “${esc(qi.value.trim())}”</span></button>`:`<p class="note" style="padding:10px">Sin coincidencias. Prueba “guante”, “bota” o “casco”.</p>`;
+  sg.hidden=false});
+qi.addEventListener("keydown",e=>{if(e.key==="Enter")doSearch()});
+$("go").onclick=doSearch;
+sg.addEventListener("click",e=>{if(e.target.closest("#seeAll"))doSearch();else if(e.target.closest("[data-p]")){sg.hidden=true;qi.value=""}});
+document.addEventListener("click",e=>{if(!e.target.closest(".search"))sg.hidden=true});
+render();
+</script>
+
+</body>
+</html>
